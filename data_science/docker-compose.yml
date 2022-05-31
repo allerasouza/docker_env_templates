@@ -1,0 +1,16 @@
+version: "3.9"
+   
+services:
+  ds:
+    build: .
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+    volumes:
+      - ./src:/code
+    ports:
+      - "8888:8888"
+    networks:
+      - aas-network
+
+networks:
+  aas-network:
+    driver: bridge
