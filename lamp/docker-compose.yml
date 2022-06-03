@@ -1,0 +1,78 @@
+version: '3.8'
+services:
+  php-apache-environment:
+    container_name: php-apache
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - ./src:/var/www/html/
+      - ./log/apache2:/var/log/apache2
+    ports:
+      - 8000:80
+    networks:
+      - aas-network
+
+  db:
+    container_name: db
+    image: mysql
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: mysql
+        MYSQL_USER: admin
+        MYSQL_PASSWORD: admin
+    ports:
+        - "9906:3306"
+    volumes:
+      - ./db/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - ./db/mysql/:/var/lib/mysql
+    networks:
+      - aas-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+        - '8080:80'
+    restart: always
+    environment:
+        PMA_HOST: db
+    depends_on:
+        - db
+    networks:
+        - aas-network
+
+networks:
+  aas-network:
+    driver: bridge
+
+# services:
+#   mysql:
+#     image: mysql
+#     expose:
+#       - "3306"
+#     environment:
+#       MYSQL_ROOT_PASSWORD: 12345
+#       MYSQL_DATABASE: admin
+#     volumes:
+#       - ./db/ :/docker-entrypoint-initdb.d/
+    
+#   phpmyadmin:
+#       image: phpmyadmin
+#       restart: always
+#       ports:
+#         - 8082:80
+#       environment:
+#         - PMA_ARBITRARY=1
+
+#   php-7.4:
+#     image: arthurelinux/php74apache
+#     ports:
+#       - 8080:80
+#     volumes:
+#       - ./log/apache2:/var/log/apache2
+#       - ./html:/var/www/html
+      
+#     depends_on:
+#       - mysql
+#       - phpmyadmin
