@@ -6,3 +6,11 @@
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# Mongodb files #
+# node_typescript_mongodb/data/db/
+node_typescript_mongodb/data/db/*
+!node_typescript_mongodb/data/db/.lock
+
+# Mac OS #
+.DS_Store
